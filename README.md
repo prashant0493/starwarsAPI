@@ -4,30 +4,30 @@ The project contains two tasks that pull data off [starwar API](https://swapi.co
 MySQL database using dal (data access layer).
 
 # Setup
-Create virtualenv
+-   Create virtualenv
 
 ```
 virtualenv venv
 ```
-Activate virtualenv
+-   Activate virtualenv
 
 ```
 source venv/bin/activate
 ```
 
-Install dependencies (using virtual environment is recommended):
+-   Install dependencies (using virtual environment is recommended):
 ```
 pip install -r requirements.txt
 ```
 
-`mysql` database installation - 
-This project has been tested against `mysql-5.6.47` using `OSX` native package installation. More
-instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html) 
+-   `mysql` database installation - 
+    Note : This project has been tested against `mysql-5.6.47` using `OSX` native package installation. 
+    More instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html) 
 
-*Database setup instructions -*
+**Database setup instructions -**
 
-[1] To setup, database use sql script `database_.sql` (contains DDL).
-[2] You should have `settings/secrets.yaml` for database credentials
+-   To setup, database use sql script `database_.sql` (contains DDL).
+-   You should have `settings/secrets.yaml` for database credentials
 
 ```
 # ---LOCAL---
@@ -42,8 +42,8 @@ LOCALSQL_DATABASE: starwarsDB
 related versions of `mysql` should be matched.
 
 # Usage
-Activate virtual env `source venv/bin/activate`
-Start the app with `python task_one.py`
+-   Activate virtual env `source venv/bin/activate`
+-   Start the app with `python task_one.py`
 
 Good luck!
 
