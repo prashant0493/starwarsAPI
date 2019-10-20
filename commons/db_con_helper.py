@@ -26,7 +26,7 @@ def _load_from_file(filename):
         return
 
     with open(filename, 'r') as f:
-        doc = yaml.load(f)
+        doc = yaml.load(f, Loader=yaml.FullLoader)
 
     if not doc:
         return

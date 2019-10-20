@@ -1,9 +1,6 @@
 """data access and storage layer, resolves storage requests by resolving urls in the dataclass"""
 
-import requests
-import json
-from typing import Dict
-from decimal import Decimal
+from typing import Dict, List
 from collections import OrderedDict
 from commons.db_con_helper import get_sql_db_connection
 from models.datamodels.characters import Character
@@ -11,12 +8,14 @@ from models.datamodels.films import Film
 from pydantic.error_wrappers import ValidationError
 
 
-def print_characters():
-
+def print_character() -> None:
+    """Prints single character present in the database.
+       Use this function for testing purposes.
+    """
     connection = get_sql_db_connection()
     try:
         with connection.cursor() as cursor:
-            # Read a single record
+            # Read all the record
             sql = "SELECT * FROM starwarsDB.characters"
             cursor.execute(sql)
             result = cursor.fetchone()
@@ -39,19 +38,28 @@ def build_sql_query(table_name, command, clause, keys, values):
         query (str): complete sql query
 
     """
+    # [TODO] create a generic function that builds all `upsert` queries.
     pass
 
 
-def get_url_ids(urls):
+def get_url_ids(urls) -> str:
+    """retrieves id part of singlular record urls such as "https://swapi.co/api/films/2/"
+
+    Args:
+        urls (list): list of urls
+
+    Returns:
+        str: space delimited string having ids from all urls.
+    """
     ids = []
     for url in urls:
         ids.append(url.split('/')[-2])
     return ' '.join(ids)
 
 
-def get_people_film_mapping():
+def get_people_film_mapping() -> List:
     """
-    Returns: All the characters present in the database.
+    Returns (list): All the characters present in the database.
     """
     connection = get_sql_db_connection()
     try:
@@ -60,13 +68,13 @@ def get_people_film_mapping():
             sql = "SELECT char_id, films FROM starwarsDB.characters"
             cursor.execute(sql)
             result = cursor.fetchall()
-            print(f"FUNCTION get_people_film_mapping() - {result}")
+            # print(f"FUNCTION get_people_film_mapping() - {result}")
             return result
     finally:
         connection.close()
 
 
-def upsert_characters(character: Dict, endpoint: str):
+def upsert_characters(character: Dict, endpoint: str) -> None:
     """
     Inserts values into `characters` table, updates on duplicate key.
     Args:
@@ -91,8 +99,13 @@ def upsert_characters(character: Dict, endpoint: str):
         else:
             values_.append(val_)
 
+    # data validation layer using pydantic model. If endpoint yields no result then return.
     try:
-        Character(**character)
+        if character is not OrderedDict([('detail', 'Not found')]):
+            Character(**character)
+        else:
+            print(f"\n\n[ WARNING ] Endpoint - {endpoint} - yields nothing!!")
+            return None
     except ValidationError as ve:
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
               f"conversions required. More details on error  - {ve}")
@@ -125,7 +138,7 @@ def upsert_characters(character: Dict, endpoint: str):
                   r"ON DUPLICATE KEY UPDATE {};" \
                   r"".format(keys_literals, int(char_id), values_literals, update_literals)
 
-            print(f"\n see here the SQL query :: \n\n{sql}")
+            # print(f"\n see here the SQL query :: \n\n{sql}")
 
             cursor.execute(sql)
             connection.commit()
@@ -133,7 +146,7 @@ def upsert_characters(character: Dict, endpoint: str):
         connection.close()
 
 
-def upsert_films(film: Dict, endpoint: str):
+def upsert_films(film: Dict, endpoint: str) -> None:
     """
     Inserts values into `films` table, updates on duplicate key.
     Args:
@@ -192,7 +205,7 @@ def upsert_films(film: Dict, endpoint: str):
                   r"ON DUPLICATE KEY UPDATE {};" \
                   r"".format(keys_literals, int(film_id), values_literals, update_literals)
 
-            print(f"\n see here the SQL query :: \n\n{sql}")
+            # print(f"\n see here the SQL query :: \n\n{sql}")
 
             cursor.execute(sql)
             connection.commit()
@@ -200,7 +213,7 @@ def upsert_films(film: Dict, endpoint: str):
         connection.close()
 
 
-def upsert_people_film_rels(mapping: Dict):
+def upsert_people_film_rels(mapping: Dict) -> None:
     """
     Inserts values into `CharFilmRelation` table, updates on duplicate key.
     Args:
@@ -225,7 +238,7 @@ def upsert_people_film_rels(mapping: Dict):
         connection.close()
 
 
-def format_output(people_id):
+def format_output(people_id) -> Dict:
     """
 
     Args:

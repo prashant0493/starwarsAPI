@@ -65,11 +65,12 @@ Good luck!
     For example,
     
     people (aka characters) <--->   film      :: many-to-many
-    people                  <--->   species   :: one-to-many (the FK added on many side of rel.)
+    people                  <--->   species   :: many-to-many 
     people                  <--->   vehicles  :: many-to-many
     people                  <--->   planets   :: many-to-many
     people                  <--->   starships :: many-to-many
     
+    [TODO] More description to be added here.
     
     INSTRUCTIONS
     
@@ -86,10 +87,37 @@ Good luck!
     LOCALSQL_DATABASE: starwarsDB
     ```
 
+# coding style
+
+[1] Since the code has been written in Python3.7, function annotations and type-hinting has been  
+    used across.
+[2] Google-Styled docstrings have been used to describe functions/classes/modules.
+[3] Pydantic data-classes have been used to validate the responses from starwar API endpoints.
+[4] Set your IDE character limit per line to maximum 100 (recommendation)
+[5] Set your configurations via ``settings/secrets.yaml``; Do *NOT* commit file containing secrets.
+[6] The generic functionality has been maintained under ``commons``.
     
 # Task 1
 
     The Star Wars API lists 87 main characters in the Star Wars saga. For the first task, we would
     like you to use a random number generator that picks a number between 1-87. Using these
     random numbers you will be pulling 15 characters from the API using Python.
+    
+# Notes
+
+Random number generator may produce some integers IDs within `range(1, 87)` which may not yield any
+results from starwars API (404s). In which case, we skip those IDs and store the rest (fair enough?)
+
+
+# Future scopes
+
+    The task involves lot of IO-bound operations. Support for multi-theading based fetch is to be 
+    added.
+    
+    ** [TODO] try another approach ** - 
+    
+    Crawl through all the urls from starwars API first, resolve dependecies endpoint-by-endpoint 
+    and store into record tables and relationship tables.
+    Finally, use local database to produce results per ask in the task.
+                       
     

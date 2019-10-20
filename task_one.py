@@ -8,29 +8,18 @@
 """
 
 import requests
-from enum import Enum
 from random import randrange
-from typing import List
+from typing import List, Dict
 
 from commons.dals import (
-    print_characters,
+    # print_character,
     upsert_characters,
     get_people_film_mapping,
     upsert_films,
     upsert_people_film_rels,
     format_output
 )
-
-
-class Endpoints(Enum):
-    """endpoints to be used throughout the script"""
-
-    PEOPLE = "https://swapi.co/api/people/{}/"
-    SPECIES = "https://swapi.co/api/species/{}/"
-    VEHICLE = "https://swapi.co/api/vehicles/{}/"
-    FILM = "https://swapi.co/api/films/{}/"
-    STARSHIP = "https://swapi.co/api/starships/{}/"
-    PLANET = "https://swapi.co/api/planets/{}/"
+from commons.constants import Endpoints
 
 
 def _randset(start: int = 1, stop: int = 87, limit: int = 15) -> List[int]:
@@ -48,12 +37,8 @@ def _randset(start: int = 1, stop: int = 87, limit: int = 15) -> List[int]:
     return [randrange(start, stop + 1) for i in range(limit)]
 
 
-result = _randset(1, 87, 15)
-# print(f"_randset(1, 87, 15) :: {result}\n\nwith length :: {len(result)}")
-
-
-def fetch_all_rel_films(rel_films):
-    """
+def fetch_all_rel_films(rel_films) -> Dict:
+    """fetches all people related films as listed in param `rel_films`.
 
     Args:
         rel_films (list): fetches all people-related films as listed.
@@ -68,13 +53,14 @@ def fetch_all_rel_films(rel_films):
     for i in rel_films:
         endpoint = Endpoints.FILM.value.format(i)
         data = requests.get(endpoint)
-        print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
+        # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
+        print(f"\n-- data has been downloaded from ```{endpoint}``` --")
         fetched_films[endpoint] = data.json()
     return fetched_films
 
 
-def fetch_all_rel_chars(peopleset):
-    """
+def fetch_all_rel_chars(peopleset) -> Dict:
+    """fetches all characters as listed in param `peopleset`
 
     Args:
         peopleset (list): fetches all people as ids listed in here.
@@ -88,13 +74,20 @@ def fetch_all_rel_chars(peopleset):
     for i in peopleset:
         endpoint = Endpoints.PEOPLE.value.format(i)
         data = requests.get(endpoint)
-        print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
+        # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
+        print(f"\n-- data has been downloaded from ```{endpoint}``` --")
         fetched_chars[endpoint] = data.json()
 
     return fetched_chars
 
 
-def resolve_film_deps():
+def resolve_film_deps() -> None:
+    """Resolves dependecies for all the `character` entities existing in the database and inserts
+        values into table `film` and table `CharFilmRelation`.
+
+    Returns: None
+
+    """
     people_film_list = get_people_film_mapping()
 
     people_film_map = {}
@@ -105,7 +98,7 @@ def resolve_film_deps():
         all_rel_films.extend(films)
 
     fetched_films = fetch_all_rel_films(all_rel_films)
-    print(f"\n\n\nfetched films here - {fetched_films}\n\n\n")
+    # print(f"\n\n\nfetched films here - {fetched_films}\n\n\n")
 
     for endpoint_, film_ in fetched_films.items():
         upsert_films(film_, endpoint_)
@@ -115,26 +108,32 @@ def resolve_film_deps():
 
 if __name__ == "__main__":
 
+    # generates list of random ids. Usage ```_randset(start, end, limit)```
     peopleset = _randset(1, 87, 15)
+    print(f"\n[ NOTE ] LIST OF RANDOM PEOPLE IDs"
+          f" (as selected by random number generator) :: \n\n{peopleset}\n")
 
     fetched_chars = fetch_all_rel_chars(peopleset)
+    # print_characters()
 
-    print_characters()
-
+    # inserts/updates each fetched character into database.
     for endpoint_, char_ in fetched_chars.items():
         upsert_characters(char_, endpoint_)
 
-    print("Pulling films of each character....!!! Another 2 mins, please wait!")
+    print("\n\n[ NOTE ] Pulling films of each character....!!! Another 2 mins, please wait!")
+
+    # gets respective films for each character and stores into relationship table in database.
     resolve_film_deps()
 
-    print("\n\nHmm!!! We are ready with random 15 people "
-          "and all of their respective films in our database!!")
-
-    print(f"\n\nEnter ID of character (aka people id) - \n[ CHOICES ]\n {peopleset}")
+    print(f"\n\nHmm!!! We are ready with random 15 people ",
+          f"and all of their respective films in our database!!",
+          f"\n\nEnter ID of character (aka people id) - \n[ CHOICES ]\n {peopleset}")
 
     try:
         people_id = int(input())
     except ValueError:
         print("[ ERROR ] Please enter numeric value from given choices")
+
+    # formats result into required format as per task 1
     result = format_output(people_id)
     print(f"\n\nHere is list of films they worked in - \n\n{result}")
