@@ -105,6 +105,41 @@ Good luck!
     like you to use a random number generator that picks a number between 1-87. Using these
     random numbers you will be pulling 15 characters from the API using Python.
     
+**OUTPUT OF TASK 1  (as of timestamp: '2019-10-20 18:31:20')**
+```json
+[
+  {
+    "film": "Attack of the Clones",
+    "characters": [
+      {
+        "name": "Anakin Skywalker",
+        "homeworld": "https://swapi.co/api/planets/1/",
+        "gender": "male"
+      }
+    ]
+  },
+  {
+    "film": "Revenge of the Sith",
+    "characters": [
+      {
+        "name": "Anakin Skywalker",
+        "homeworld": "https://swapi.co/api/planets/1/",
+        "gender": "male"
+      }
+    ]
+  },
+  {
+    "film": "The Phantom Menace",
+    "characters": [
+      {
+        "name": "Anakin Skywalker",
+        "homeworld": "https://swapi.co/api/planets/1/",
+        "gender": "male"
+      }
+    ]
+  }
+]
+```
 # Notes/Warnings
 
 Random number generator may produce some integers IDs within `range(1, 87)` which may not yield any

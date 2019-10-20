@@ -24,22 +24,65 @@ def print_character() -> None:
         connection.close()
 
 
-def build_sql_query(table_name, command, clause, keys, values):
+def build_upsert_sql_query(
+    table_name,
+    commands,
+    prime_key,
+    prime_value,
+    clause,
+    keys_,
+    values_
+) -> str:
     """BUilds sql query based on input.
 
     Args:
         table_name (str): table under consideration for sql query.
-        command (str): sql commands such as select, insert, update etc.
+        commands (str): sql commands such as select, insert, update etc.
+        prime_key (str): primary key for particular table.
+        prime_value(str): value to be updated for primary key
         clause (str): clauses to filter results.
-        keys (list): list of keys query refers to.
-        values (list): list of values query stores (required for insert and update statements.)
+        keys_ (list): list of keys query refers to.
+        values_ (list): list of values query stores (required for insert and update statements.)
 
     Returns:
         query (str): complete sql query
 
     """
-    # [TODO] create a generic function that builds all `upsert` queries.
-    pass
+
+    keys_literals = ", ".join(keys_)
+
+    mid_literals = []
+    for i in range(len(values_)):
+        mid = '''"''' + str(values_[i]) + '''"'''
+        mid_literals.append(mid)
+
+    values_literals = ", ".join(mid_literals)
+
+    mid_update_literals = []
+    for key_lit, val_lit in zip(keys_, mid_literals):
+        mid = ''' , ''' + key_lit + '''=''' + val_lit
+        mid_update_literals.append(mid)
+
+    update_literals = "".join(mid_update_literals)
+
+    # skipping first
+    update_literals = update_literals[3:]
+
+    sql = r"{} {}" \
+          r"({}, {}) " \
+          r"VALUES({}, {})" \
+          r" {} {};" \
+          r"".format(commands,
+                     table_name,
+                     prime_key,
+                     keys_literals,
+                     int(prime_value),
+                     values_literals,
+                     clause,
+                     update_literals
+                     )
+
+    return sql
 
 
 def get_url_ids(urls) -> str:
@@ -113,30 +156,15 @@ def upsert_characters(character: Dict, endpoint: str) -> None:
     try:
         with connection.cursor() as cursor:
 
-            keys_literals = ", ".join(keys_)
-
-            mid_literals = []
-            for i in range(len(values_)):
-                mid = '''"''' + values_[i] + '''"'''
-                mid_literals.append(mid)
-
-            values_literals = ", ".join(mid_literals)
-
-            mid_update_literals = []
-            for key_lit, val_lit in zip(keys_, mid_literals):
-                mid = ''' , ''' + key_lit + '''=''' + val_lit
-                mid_update_literals.append(mid)
-
-            update_literals = "".join(mid_update_literals)
-
-            # skipping first
-            update_literals = update_literals[3:]
-
-            sql = r"INSERT INTO starwarsDB.characters" \
-                  r"(char_id, {}) " \
-                  r"VALUES({}, {})" \
-                  r"ON DUPLICATE KEY UPDATE {};" \
-                  r"".format(keys_literals, int(char_id), values_literals, update_literals)
+            sql = build_upsert_sql_query(
+                "starwarsDB.characters",
+                "INSERT INTO",
+                "char_id",
+                char_id,
+                "ON DUPLICATE KEY UPDATE",
+                keys_,
+                values_
+            )
 
             # print(f"\n see here the SQL query :: \n\n{sql}")
 
@@ -180,30 +208,15 @@ def upsert_films(film: Dict, endpoint: str) -> None:
     try:
         with connection.cursor() as cursor:
 
-            keys_literals = ", ".join(keys_)
-
-            mid_literals = []
-            for i in range(len(values_)):
-                mid = '''"''' + str(values_[i]) + '''"'''
-                mid_literals.append(mid)
-
-            values_literals = ", ".join(mid_literals)
-
-            mid_update_literals = []
-            for key_lit, val_lit in zip(keys_, mid_literals):
-                mid = ''' , ''' + key_lit + '''=''' + val_lit
-                mid_update_literals.append(mid)
-
-            update_literals = "".join(mid_update_literals)
-
-            # skipping first
-            update_literals = update_literals[3:]
-
-            sql = r"INSERT INTO starwarsDB.film" \
-                  r"(film_id, {}) " \
-                  r"VALUES({}, {})" \
-                  r"ON DUPLICATE KEY UPDATE {};" \
-                  r"".format(keys_literals, int(film_id), values_literals, update_literals)
+            sql = build_upsert_sql_query(
+                "starwarsDB.film",
+                "INSERT INTO",
+                "film_id",
+                film_id,
+                "ON DUPLICATE KEY UPDATE",
+                keys_,
+                values_
+            )
 
             # print(f"\n see here the SQL query :: \n\n{sql}")
 
