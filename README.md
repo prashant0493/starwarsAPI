@@ -4,6 +4,16 @@ The project contains two tasks that pull data off [starwar API](https://swapi.co
 MySQL database using dal (data access layer).
 
 # Setup
+Create virtualenv
+
+```
+virtualenv venv
+```
+Activate virtualenv
+
+```
+source venv/bin/activate
+```
 
 Install dependencies (using virtual environment is recommended):
 ```
@@ -14,7 +24,7 @@ pip install -r requirements.txt
 This project has been tested against `mysql-5.6.47` using `OSX` native package installation. More
 instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html) 
 
-Provide MySQL credentials in `config/secrets_local.yaml`:
+Provide MySQL credentials in `config/secrets.yaml`:
 ```
 # ---LOCAL---
 LOCALSQL_USER: root
@@ -28,17 +38,14 @@ LOCALSQL_DATABASE: starwarsDB
 related versions of `mysql` should be matched.
 
 # Usage
-
-Start the app with `./run_server.sh`, and go to [http://localhost:8080/admin/](http://localhost:8080/admin/).
+Activate virtual env `source venv/bin/activate`
+Start the app with `python task_one.py`
 
 Good luck!
 
 # Running tests
 
-Run the tests with `./run_tests.py ~/.local/google-cloud-sdk/`.
-
-For code coverage report run the following `coverage run run_tests.py ~/.local/google-cloud-sdk/; coverage html` (but
-you have to `pip install coverage` first). Open `htmlcov/index.html` to view the report.
+[TODO] to be added soon.
 
 # Development notes
 
@@ -75,7 +82,7 @@ you have to `pip install coverage` first). Open `htmlcov/index.html` to view the
     LOCALSQL_USER: root
     LOCALSQL_HOST: 127.0.0.1
     LOCALSQL_PORT: 3306
-    LOCALSQL_PASSWORD: glorious504
+    LOCALSQL_PASSWORD: xxxx
     LOCALSQL_DATABASE: starwarsDB
     ```
 
