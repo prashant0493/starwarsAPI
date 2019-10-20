@@ -24,7 +24,11 @@ pip install -r requirements.txt
 This project has been tested against `mysql-5.6.47` using `OSX` native package installation. More
 instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html) 
 
-Provide MySQL credentials in `config/secrets.yaml`:
+*Database setup instructions -*
+
+[1] To setup, database use sql script `database_.sql` (contains DDL).
+[2] You should have `settings/secrets.yaml` for database credentials
+
 ```
 # ---LOCAL---
 LOCALSQL_USER: root
@@ -71,11 +75,6 @@ Good luck!
     people                  <--->   starships :: many-to-many
     
     [TODO] More description to be added here.
-    
-    INSTRUCTIONS
-    
-    [1] To setup, database use sql script `database_.sql` (contains DDL).
-    [2] You should have `settings/secrets.yaml` for database credentials
     
     Example, 
     ```
