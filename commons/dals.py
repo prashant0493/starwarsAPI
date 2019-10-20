@@ -273,10 +273,13 @@ def format_output(people_id) -> Dict:
 
             unique_movies = list(set([v['title'] for v in sql2_result]))
 
-            final_result = {}
+            final_result = []
             for movie in unique_movies:
-                final_result["film"] = movie
-                final_result["characters"] = sql1_result
+                mid_result = {}
+                mid_result.setdefault("film", movie)
+                mid_result.setdefault("characters", [])
+                mid_result["characters"].append(sql1_result)
+                final_result.append(mid_result)
 
             return final_result
 

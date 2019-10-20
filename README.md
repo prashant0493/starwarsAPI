@@ -21,7 +21,8 @@ pip install -r requirements.txt
 ```
 
 -   `mysql` database installation - 
-    Note : This project has been tested against `mysql-5.6.47` using `OSX` native package installation. 
+    Note : This project has been tested against `mysql-5.6.47` using `OSX` native package
+           installation. 
     More instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg.html) 
 
 **Database setup instructions -**
@@ -104,7 +105,7 @@ Good luck!
     like you to use a random number generator that picks a number between 1-87. Using these
     random numbers you will be pulling 15 characters from the API using Python.
     
-# Notes
+# Notes/Warnings
 
 Random number generator may produce some integers IDs within `range(1, 87)` which may not yield any
 results from starwars API (404s). In which case, we skip those IDs and store the rest (fair enough?)
