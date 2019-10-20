@@ -85,16 +85,18 @@ Good luck!
     LOCALSQL_PASSWORD: xxxx
     LOCALSQL_DATABASE: starwarsDB
     ```
+    
+    NOTE : Readers are requested to raise PRs with `problems identified` with the script.
 
 # coding style
 
-[1] Since the code has been written in Python3.7, function annotations and type-hinting has been  
+-   Since the code has been written in Python3.7, function annotations and type-hinting has been  
     used across.
-[2] Google-Styled docstrings have been used to describe functions/classes/modules.
-[3] Pydantic data-classes have been used to validate the responses from starwar API endpoints.
-[4] Set your IDE character limit per line to maximum 100 (recommendation)
-[5] Set your configurations via ``settings/secrets.yaml``; Do *NOT* commit file containing secrets.
-[6] The generic functionality has been maintained under ``commons``.
+-   Google-Styled docstrings have been used to describe functions/classes/modules.
+-   Pydantic data-classes have been used to validate the responses from starwar API endpoints.
+-   Set your IDE character limit per line to maximum 100 (recommendation)
+-   Set your configurations via ``settings/secrets.yaml``; Do *NOT* commit file containing secrets.
+-   The generic functionality has been maintained under ``commons``.
     
 # Task 1
 
