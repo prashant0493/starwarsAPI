@@ -278,7 +278,7 @@ def format_output(people_id) -> Dict:
                 mid_result = {}
                 mid_result.setdefault("film", movie)
                 mid_result.setdefault("characters", [])
-                mid_result["characters"].append(sql1_result)
+                mid_result["characters"].extend(sql1_result)
                 final_result.append(mid_result)
 
             return final_result
