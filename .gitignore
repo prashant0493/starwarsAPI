@@ -1,0 +1,8 @@
+venv
+bin
+include
+lib
+pyvenv.cfg
+*.pyc
+config/secrets*.yaml
+.env
