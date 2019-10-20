@@ -6,3 +6,5 @@ pyvenv.cfg
 *.pyc
 config/secrets*.yaml
 .env
+.python-version
+.idea/

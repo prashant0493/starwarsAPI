@@ -115,7 +115,7 @@ def resolve_film_deps():
 
 if __name__ == "__main__":
 
-    peopleset = _randset(1, 87, 2)
+    peopleset = _randset(1, 87, 15)
 
     fetched_chars = fetch_all_rel_chars(peopleset)
 
@@ -130,7 +130,11 @@ if __name__ == "__main__":
     print("\n\nHmm!!! We are ready with random 15 people "
           "and all of their respective films in our database!!")
 
-    print("\n\nEnter ID of character (aka people id) - ")
-    people_id = int(input())
+    print(f"\n\nEnter ID of character (aka people id) - \n[ CHOICES ]\n {peopleset}")
+
+    try:
+        people_id = int(input())
+    except ValueError:
+        print("[ ERROR ] Please enter numeric value from given choices")
     result = format_output(people_id)
     print(f"\n\nHere is list of films they worked in - \n\n{result}")
