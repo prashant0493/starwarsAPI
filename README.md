@@ -16,10 +16,12 @@ instructions [here](https://dev.mysql.com/doc/refman/5.6/en/osx-installation-pkg
 
 Provide MySQL credentials in `config/secrets_local.yaml`:
 ```
-QBO_CLIENT_ID: "the_best_app_ever"
-QBO_CLIENT_SECRET: "dont_tell_anyone"
-XERO_CONSUMER_KEY: "no_im_the_best_app_ever"
-XERO_CONSUMER_SECRET: "i_wont_tell"
+# ---LOCAL---
+LOCALSQL_USER: root
+LOCALSQL_HOST: 127.0.0.1
+LOCALSQL_PORT: 3306
+LOCALSQL_PASSWORD: xxxxx
+LOCALSQL_DATABASE: starwarsDB
 ```
 
 `pymysql` [installation](https://pymysql.readthedocs.io/en/latest/user/installation.html) and 
