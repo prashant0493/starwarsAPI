@@ -8,3 +8,4 @@ config/secrets*.yaml
 .env
 .python-version
 .idea/
+*.json

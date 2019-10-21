@@ -157,4 +157,3 @@ results from starwars API (404s). In which case, we skip those IDs and store the
     and store into record tables and relationship tables.
     Finally, use local database to produce results per ask in the task.
                        
-    

@@ -3,7 +3,7 @@ This module defines pydantic (provides Py3 data-classes validation out of the bo
 for validation and (de)serialization in API requests/responses.
 """
 
-from typing import List
+from typing import List, Optional
 from decimal import Decimal
 from models.basemodel import Base
 
@@ -20,7 +20,7 @@ class Starship(Base):
     cost_in_credits: str
     crew: int
     hyperdrive_rating: str
-    length: Decimal
+    length: str
     manufacturer: str
     max_atmosphering_speed: str
     model: str
@@ -29,5 +29,5 @@ class Starship(Base):
     passengers: str
 
     # relationship attribute fields
-    films: List[str]
-    pilots: List[str]
+    films: Optional[List[str]]
+    pilots: Optional[List[str]]

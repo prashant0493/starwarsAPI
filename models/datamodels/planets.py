@@ -3,7 +3,7 @@ This module defines pydantic (provides Py3 data-classes validation out of the bo
 for validation and (de)serialization in API requests/responses.
 """
 
-from typing import List
+from typing import List, Optional
 from decimal import Decimal
 from models.basemodel import Base
 
@@ -19,12 +19,12 @@ class Planet(Base):
     gravity: str
     name: str
     orbital_period: str
-    population: int
+    population: str
     rotation_period: str
     surface_water: str
     terrain: str
 
     # Relationship attribute fields
-    films: List[str]
-    residents: List[str]
+    films: Optional[List[str]]
+    residents: Optional[List[str]]
 

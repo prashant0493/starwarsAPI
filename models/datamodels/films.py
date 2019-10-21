@@ -3,9 +3,7 @@ This module defines pydantic (provides Py3 data-classes validation out of the bo
 for validation and (de)serialization in API requests/responses.
 """
 
-from typing import List
-from decimal import Decimal
-from datetime import date
+from typing import List, Optional
 from models.basemodel import Base
 
 
@@ -20,11 +18,11 @@ class Film(Base):
     opening_crawl: str
     director: str
     producer: str
-    release_date: date
+    release_date: str
 
     # relationship attribute fields
-    characters: List[str]
-    planets: List[str]
-    starships: List[str]
-    vehicles: List[str]
-    species: List[str]
+    characters: Optional[List[str]]
+    planets: Optional[List[str]]
+    starships: Optional[List[str]]
+    vehicles: Optional[List[str]]
+    species: Optional[List[str]]
