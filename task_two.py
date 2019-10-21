@@ -54,7 +54,15 @@ def fetch_film(film_id) -> Dict:
     return data.json()
 
 
-def fetch_endpoint(url):
+def fetch_endpoint(url) -> Optional[str]:
+    """hits the url and gets back the data
+
+    Args:
+        url (str): url endpoint of swapi
+
+    Returns:
+        jsonified object returned from swapi
+    """
     data = requests.get(url)
 
     if data.status_code == 404:
@@ -68,9 +76,6 @@ def remove_cross_referencing_urls(resolved_objs: Optional[List]) -> None:
 
     Args:
         resolved_objs (list):
-
-    Returns:
-
     """
 
     rel_attrs = ["people", "films", "characters", "planets", "starships", "vehicles", "species"]
@@ -95,8 +100,11 @@ def resolve_rels(urls, rel_attr) -> Optional[List]:
         returns serialized version of resolved objects.
     """
 
+    poolsize_ = 10
+    print(f"\n[ NOTE ] resolving relationship urls - {rel_attr} -\nReal quick!! "
+          f"ThreadPool of {poolsize_} at work.")
     # create a thread-pool, to resolve IO-intensive operation real quick.
-    pool = ThreadPool(5)
+    pool = ThreadPool(poolsize_)
     results = pool.map(fetch_endpoint, urls)
 
     # some endpoints may NOT yield results (i.e. 404s Not Found.)
@@ -119,6 +127,7 @@ def resolve_rels(urls, rel_attr) -> Optional[List]:
     else:
         pass
 
+    print(f"\n[ NOTE ] removing all cross-referencing urls from relationship fields...")
     remove_cross_referencing_urls(resolved_objs)
 
     return resolved_objs
@@ -128,11 +137,11 @@ def format_output(film: Film, resolutions: Dict) -> str:
     """formats standard JSON output as required
 
     Args:
-        film:
-        resolutions:
+        film (Film): serialized film object.
+        resolutions (dict): mapping dict of relationship fields per film.
 
     Returns:
-
+        jsonified version serialized by pydantic data-class `Final`
     """
 
     final = film.dict()
@@ -169,5 +178,5 @@ if __name__ == "__main__":
     with open(filename, 'w') as foo:
         foo.write(output)
 
-    print(f"[ SUCCESS ] The output JSON has been stored here - {filename}")
+    print(f"\n\n[ SUCCESS ] The output JSON has been stored here - {filename}")
 
