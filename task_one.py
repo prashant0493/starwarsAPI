@@ -7,6 +7,7 @@
     numbers you will be pulling 15 characters from the API using Python.
 """
 
+import json
 import requests
 from random import randrange
 from typing import List, Dict
@@ -20,6 +21,7 @@ from commons.dals import (
     format_output
 )
 from commons.constants import Endpoints
+from multiprocessing.pool import ThreadPool
 
 
 def _randset(start: int = 1, stop: int = 87, limit: int = 15) -> List[int]:
@@ -59,11 +61,11 @@ def fetch_all_rel_films(rel_films) -> Dict:
     return fetched_films
 
 
-def fetch_all_rel_chars(peopleset) -> Dict:
+def fetch_all_rel_chars(people_id) -> Dict:
     """fetches all characters as listed in param `peopleset`
 
     Args:
-        peopleset (list): fetches all people as ids listed in here.
+        people_id (int): fetches people id
 
     Returns:
         fetched_chars (dict): character objects as received from swapi.
@@ -71,18 +73,19 @@ def fetch_all_rel_chars(peopleset) -> Dict:
 
     fetched_chars = dict()
 
-    for i in peopleset:
-        endpoint = Endpoints.PEOPLE.value.format(i)
-        data = requests.get(endpoint)
-        # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
-        print(f"\n-- data has been downloaded from ```{endpoint}``` --")
+    endpoint = Endpoints.PEOPLE.value.format(people_id)
+    data = requests.get(endpoint)
+    # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
+    print(f"\n-- data has been downloaded from ```{endpoint}``` -- {data.status_code}")
+
+    if data.status_code == 200:
         fetched_chars[endpoint] = data.json()
 
     return fetched_chars
 
 
 def resolve_film_deps() -> None:
-    """Resolves dependecies for all the `character` entities existing in the database and inserts
+    """Resolves dependencies for all the `character` entities existing in the database and inserts
         values into table `film` and table `CharFilmRelation`.
 
     Returns: None
@@ -97,6 +100,7 @@ def resolve_film_deps() -> None:
         people_film_map[int(bundle["char_id"])] = [int(film) for film in films]
         all_rel_films.extend(films)
 
+    all_rel_films = list(set(all_rel_films))
     fetched_films = fetch_all_rel_films(all_rel_films)
     # print(f"\n\n\nfetched films here - {fetched_films}\n\n\n")
 
@@ -113,8 +117,18 @@ if __name__ == "__main__":
     print(f"\n[ NOTE ] LIST OF RANDOM PEOPLE IDs"
           f" (as selected by random number generator) :: \n\n{peopleset}\n")
 
-    fetched_chars = fetch_all_rel_chars(peopleset)
-    # print_characters()
+    poolsize_ = 5
+    print(f"\n[ NOTE ] resolving relationship urls -\nReal quick!! "
+          f"ThreadPool of {poolsize_} at work.")
+
+    # create a thread-pool, to resolve IO-intensive operation real quick.
+    pool = ThreadPool(poolsize_)
+    fetched_chars_list = pool.map(fetch_all_rel_chars, peopleset)
+
+    # merge all list of dicts into one single dict.
+    fetched_chars = {}
+    for d in fetched_chars_list:
+        fetched_chars.update(d)
 
     # inserts/updates each fetched character into database.
     for endpoint_, char_ in fetched_chars.items():
@@ -126,14 +140,24 @@ if __name__ == "__main__":
     resolve_film_deps()
 
     print(f"\n\nHmm!!! We are ready with random 15 people ",
-          f"and all of their respective films in our database!!",
-          f"\n\nEnter ID of character (aka people id) - \n[ CHOICES ]\n {peopleset}")
+          f"and all of their respective films in our database!!"),
 
-    try:
-        people_id = int(input())
-    except ValueError:
-        print("[ ERROR ] Please enter numeric value from given choices")
+    while True:
+        try:
+            people_id = (input(f"\n\nEnter ID of character (aka people id) \t [hit `q` to exit]"
+                               f"- \n[ CHOICES ]\n {peopleset}\n"))
+
+            if people_id == 'q' or 'Q':
+                break
+
+            people_id = int(people_id)
+
+        except ValueError:
+            print("[ ERROR ] Please enter numeric value from given choices")
+            continue
 
     # formats result into required format as per task 1
     result = format_output(people_id)
-    print(f"\n\nHere is list of films they worked in - \n\n{result}")
+    print(f"\n\nHere is list of films they worked in - \n\n")
+    print(json.dumps(result, indent=4, sort_keys=True))
+

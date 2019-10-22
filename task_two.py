@@ -179,4 +179,3 @@ if __name__ == "__main__":
         foo.write(output)
 
     print(f"\n\n[ SUCCESS ] The output JSON has been stored here - {filename}")
-

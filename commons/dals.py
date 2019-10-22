@@ -150,6 +150,7 @@ def upsert_characters(character: Dict, endpoint: str) -> None:
             print(f"\n\n[ WARNING ] Endpoint - {endpoint} - yields nothing!!")
             return None
     except ValidationError as ve:
+        import pdb; pdb.set_trace()
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
               f"conversions required. More details on error  - {ve}")
 
