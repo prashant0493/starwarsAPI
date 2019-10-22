@@ -144,13 +144,11 @@ if __name__ == "__main__":
 
     while True:
         try:
-            people_id = (input(f"\n\nEnter ID of character (aka people id) \t [hit `q` to exit]"
+            people_id = (input(f"\n\nEnter ID of character (aka people id)\t (any choice to exit)"
                                f"- \n[ CHOICES ]\n {peopleset}\n"))
 
-            if people_id == 'q' or 'Q':
-                break
-
             people_id = int(people_id)
+            break
 
         except ValueError:
             print("[ ERROR ] Please enter numeric value from given choices")
