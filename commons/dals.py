@@ -111,7 +111,6 @@ def get_people_film_mapping() -> List:
             sql = "SELECT char_id, films FROM starwarsDB.characters"
             cursor.execute(sql)
             result = cursor.fetchall()
-            # print(f"FUNCTION get_people_film_mapping() - {result}")
             return result
     finally:
         connection.close()
@@ -218,8 +217,6 @@ def upsert_films(film: Dict, endpoint: str) -> None:
                 keys_,
                 values_
             )
-
-            # print(f"\n see here the SQL query :: \n\n{sql}")
 
             cursor.execute(sql)
             connection.commit()

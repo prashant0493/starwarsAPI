@@ -55,7 +55,6 @@ def fetch_all_rel_films(rel_films) -> Dict:
     for i in rel_films:
         endpoint = Endpoints.FILM.value.format(i)
         data = requests.get(endpoint)
-        # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
         print(f"\n-- data has been downloaded from ```{endpoint}``` --")
         fetched_films[endpoint] = data.json()
     return fetched_films
@@ -75,7 +74,6 @@ def fetch_all_rel_chars(people_id) -> Dict:
 
     endpoint = Endpoints.PEOPLE.value.format(people_id)
     data = requests.get(endpoint)
-    # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
     print(f"\n-- data has been downloaded from ```{endpoint}``` -- {data.status_code}")
 
     if data.status_code == 200:
@@ -102,7 +100,6 @@ def resolve_film_deps() -> None:
 
     all_rel_films = list(set(all_rel_films))
     fetched_films = fetch_all_rel_films(all_rel_films)
-    # print(f"\n\n\nfetched films here - {fetched_films}\n\n\n")
 
     for endpoint_, film_ in fetched_films.items():
         upsert_films(film_, endpoint_)
