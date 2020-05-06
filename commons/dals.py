@@ -149,7 +149,6 @@ def upsert_characters(character: Dict, endpoint: str) -> None:
             print(f"\n\n[ WARNING ] Endpoint - {endpoint} - yields nothing!!")
             return None
     except ValidationError as ve:
-        import pdb; pdb.set_trace()
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
               f"conversions required. More details on error  - {ve}")
 
@@ -203,7 +202,7 @@ def upsert_films(film: Dict, endpoint: str) -> None:
         Film(**film)
     except ValidationError as ve:
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
-              f"conversions required. More details on error  - {ve}")
+              f" conversions required. More details on error  - {ve}")
 
     try:
         with connection.cursor() as cursor:

@@ -55,7 +55,11 @@ def fetch_all_rel_films(rel_films) -> Dict:
     for i in rel_films:
         endpoint = Endpoints.FILM.value.format(i)
         data = requests.get(endpoint)
-        print(f"\n-- data has been downloaded from ```{endpoint}``` --")
+        if data.status_code != 200:
+            print(f"[ ERROR ] problem fetching data for film {i}. Error code - {data.status_code}"
+                  f"\n...skipping it from result set")
+            continue
+        print(f"\n-- data has been downloaded from ```{endpoint}``` -- {data.status_code}")
         fetched_films[endpoint] = data.json()
     return fetched_films
 

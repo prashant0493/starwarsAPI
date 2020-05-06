@@ -18,7 +18,7 @@ class Starship(Base):
     cargo_capacity: str
     consumables: str
     cost_in_credits: str
-    crew: int
+    crew: str
     hyperdrive_rating: str
     length: str
     manufacturer: str
