@@ -111,7 +111,6 @@ def get_people_film_mapping() -> List:
             sql = "SELECT char_id, films FROM starwarsDB.characters"
             cursor.execute(sql)
             result = cursor.fetchall()
-            # print(f"FUNCTION get_people_film_mapping() - {result}")
             return result
     finally:
         connection.close()
@@ -150,7 +149,6 @@ def upsert_characters(character: Dict, endpoint: str) -> None:
             print(f"\n\n[ WARNING ] Endpoint - {endpoint} - yields nothing!!")
             return None
     except ValidationError as ve:
-        import pdb; pdb.set_trace()
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
               f"conversions required. More details on error  - {ve}")
 
@@ -204,7 +202,7 @@ def upsert_films(film: Dict, endpoint: str) -> None:
         Film(**film)
     except ValidationError as ve:
         print(f"[ Error ] fetched character record does not meet validations. Perhaps, type"
-              f"conversions required. More details on error  - {ve}")
+              f" conversions required. More details on error  - {ve}")
 
     try:
         with connection.cursor() as cursor:
@@ -218,8 +216,6 @@ def upsert_films(film: Dict, endpoint: str) -> None:
                 keys_,
                 values_
             )
-
-            # print(f"\n see here the SQL query :: \n\n{sql}")
 
             cursor.execute(sql)
             connection.commit()

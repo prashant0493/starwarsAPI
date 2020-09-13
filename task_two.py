@@ -49,7 +49,6 @@ def fetch_film(film_id) -> Dict:
 
     endpoint = Endpoints.FILM.value.format(film_id)
     data = requests.get(endpoint)
-    # print(f"\ndata has been downloaded from {endpoint} - {data.json()}\n")
     print(f"\n-- data has been downloaded from ```{endpoint}``` --")
     return data.json()
 
